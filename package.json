@@ -41,10 +41,10 @@
   "scripts": {
     "start": "concurrently \"npm run server:dev\" \"npm run bundler:dev\"",
     "start:prod": "concurrently \"npm run server:prod\" \"npm run bundler:prod\"",
-    "server:dev": "cross-env NODE_ENV=development nodemon -- --conditions=react-server server",
-    "server:prod": "cross-env NODE_ENV=production nodemon -- --conditions=react-server server",
-    "bundler:dev": "npm run buildPlugin && cross-env NODE_ENV=development nodemon -- scripts/build-webpack.js",
-    "bundler:prod": "npm run buildPlugin && cross-env NODE_ENV=production nodemon -- scripts/build-webpack.js",
+    "server:dev": "cross-env NODE_ENV=development node --conditions=react-server server",
+    "server:prod": "cross-env NODE_ENV=production node --conditions=react-server server",
+    "bundler:dev": "npm run buildPlugin && cross-env NODE_ENV=development node scripts/build-webpack.js",
+    "bundler:prod": "npm run buildPlugin && cross-env NODE_ENV=production node scripts/build-webpack.js",
     "prettier": "prettier --write **/*.js",
     "seed": "node ./scripts/seed.js",
     "buildPlugin": "tsc --esModuleInterop --target es2017 --moduleResolution node --module commonjs scripts/build-webpack.ts"
