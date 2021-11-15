@@ -5,58 +5,60 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
+
 'use strict';
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
+
 const path = require('path');
 const rimraf = require('rimraf');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const react_server_dom_webpack_plugin_1 = __importDefault(require("../plugins/react-server-dom-webpack-plugin"));
+const ReactServerWebpackPlugin = require('../plugins/react-server-dom-webpack-plugin.js')
+  .default;
+
 const isProduction = process.env.NODE_ENV === 'production';
 rimraf.sync(path.resolve(__dirname, '../build'));
-webpack({
+webpack(
+  {
     mode: isProduction ? 'production' : 'development',
     devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
     entry: [path.resolve(__dirname, '../src/index.client.js')],
     output: {
-        path: path.resolve(__dirname, '../build'),
-        filename: 'main.js',
+      path: path.resolve(__dirname, '../build'),
+      filename: 'main.js',
     },
     module: {
-        rules: [
-            {
-                test: /\.js$/,
-                use: 'babel-loader',
-                exclude: /node_modules/,
-            },
-        ],
+      rules: [
+        {
+          test: /\.js$/,
+          use: 'babel-loader',
+          exclude: /node_modules/,
+        },
+      ],
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            inject: true,
-            template: path.resolve(__dirname, '../public/index.html'),
-        }),
-        new react_server_dom_webpack_plugin_1.default({ isServer: false }),
+      new HtmlWebpackPlugin({
+        inject: true,
+        template: path.resolve(__dirname, '../public/index.html'),
+      }),
+      new ReactServerWebpackPlugin({isServer: false}),
     ],
-}, (err, stats) => {
+  },
+  (err, stats) => {
     if (err) {
-        console.error(err.stack || err);
-        if (err.details) {
-            console.error(err.details);
-        }
-        process.exit(1);
-        return;
+      console.error(err.stack || err);
+      if (err.details) {
+        console.error(err.details);
+      }
+      process.exit(1);
+      return;
     }
     const info = stats.toJson();
     if (stats.hasErrors()) {
-        console.log('Finished running webpack with errors.');
-        info.errors.forEach((e) => console.error(e));
-        process.exit(1);
+      console.log('[client build] Finished running webpack with errors.');
+      info.errors.forEach((e) => console.error(e));
+      process.exit(1);
+    } else {
+      console.log('[client build] Finished running webpack.');
     }
-    else {
-        console.log('Finished running webpack.');
-    }
-});
+  }
+);

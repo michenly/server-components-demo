@@ -47,7 +47,7 @@
     "bundler:prod": "npm run buildPlugin && cross-env NODE_ENV=production node scripts/build-webpack.js",
     "prettier": "prettier --write **/*.js",
     "seed": "node ./scripts/seed.js",
-    "buildPlugin": "tsc --esModuleInterop --target es2017 --moduleResolution node --module commonjs scripts/build-webpack.ts"
+    "buildPlugin": "tsc --esModuleInterop --target es2017 --moduleResolution node --module commonjs plugins/react-server-dom-webpack-plugin.ts"
   },
   "babel": {
     "presets": [
