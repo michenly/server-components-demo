@@ -7,7 +7,8 @@
  */
 
 import {fetch} from 'react-fetch';
-import {readFile} from 'react-fs';
+// Todo: figure out if there are webpack config way I can import from `react-fs` instead
+// import {readFile} from 'react-fs/index.node.server';
 import {format} from 'date-fns';
 import path from 'path';
 

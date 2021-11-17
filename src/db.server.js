@@ -6,7 +6,8 @@
  *
  */
 
-import {Pool} from 'react-pg';
+// Todo: figure out if there are webpack config way I can import from `react-pg` instead
+import {Pool} from 'react-pg/index.node.server';
 import credentials from '../credentials';
 
 // Don't keep credentials in the source tree in a real app!

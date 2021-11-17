@@ -58,7 +58,10 @@ webpack(
         // },
       ],
     },
-    plugins: [],
+    plugins: [
+      // Needed to resolved https://stackoverflow.com/questions/41522744/webpack-import-error-with-node-postgres-pg-client
+      new webpack.IgnorePlugin({resourceRegExp: /^pg-native$/}),
+    ],
   },
   (err, stats) => {
     if (err) {
