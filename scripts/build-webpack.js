@@ -14,6 +14,10 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ReactServerWebpackPlugin = require('../plugins/react-server-dom-webpack-plugin.js')
   .default;
+const ReactClientComponentsLoaderInServer = require('../plugins/react-client-components-loader-in-server.js')
+  .default;
+const ReactExcludeServerLoader = require('../plugins/next-react-flight-exclude-server-loader.js')
+  .default;
 
 const isProduction = process.env.NODE_ENV === 'production';
 rimraf.sync(path.resolve(__dirname, '../build'));
@@ -21,9 +25,68 @@ webpack(
   {
     mode: isProduction ? 'production' : 'development',
     devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
+    entry: [path.resolve(__dirname, '../src/App.server.js')],
+    output: {
+      path: path.resolve(__dirname, '../build/server'),
+      filename: 'main.js',
+    },
+    target: 'node',
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          use: 'babel-loader',
+          exclude: /node_modules/,
+        },
+        // {
+        //   test: /\.client\.js?$/,
+        //   use: [
+        //     {
+        //       loader: require.resolve(
+        //         './../plugins/react-client-components-loader-in-server.js'
+        //       ),
+        //     },
+        //   ],
+        // },
+        // {
+        //   test: /\.server\.js?$/,
+        //   use: {
+        //     loader: require.resolve(
+        //       './../plugins/next-react-flight-exclude-server-loader.js'
+        //     ),
+        //   },
+        // },
+      ],
+    },
+    plugins: [],
+  },
+  (err, stats) => {
+    if (err) {
+      console.error(err.stack || err);
+      if (err.details) {
+        console.error(err.details);
+      }
+      process.exit(1);
+      return;
+    }
+    const info = stats.toJson();
+    if (stats.hasErrors()) {
+      console.log('[server build] Finished running webpack with errors.');
+      info.errors.forEach((e) => console.error(e));
+      process.exit(1);
+    } else {
+      console.log('[server build] Finished running webpack.');
+    }
+  }
+);
+
+webpack(
+  {
+    mode: isProduction ? 'production' : 'development',
+    devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
     entry: [path.resolve(__dirname, '../src/index.client.js')],
     output: {
-      path: path.resolve(__dirname, '../build'),
+      path: path.resolve(__dirname, '../build/client'),
       filename: 'main.js',
     },
     module: {

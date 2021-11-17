@@ -39,15 +39,15 @@
     "typescript": "^4.4.3"
   },
   "scripts": {
-    "start": "concurrently \"npm run server:dev\" \"npm run bundler:dev\"",
-    "start:prod": "concurrently \"npm run server:prod\" \"npm run bundler:prod\"",
-    "server:dev": "cross-env NODE_ENV=development node --conditions=react-server server",
-    "server:prod": "cross-env NODE_ENV=production node --conditions=react-server server",
-    "bundler:dev": "npm run buildPlugin && cross-env NODE_ENV=development node scripts/build-webpack.js",
-    "bundler:prod": "npm run buildPlugin && cross-env NODE_ENV=production node scripts/build-webpack.js",
+    "start": "npm run bundler:dev && npm run server:dev",
+    "start:prod": "npm run bundler:prod && npm run server:prod",
+    "server:dev": "cross-env NODE_ENV=development node --conditions=react-server build/server/main.js",
+    "server:prod": "cross-env NODE_ENV=production node --conditions=react-server build/server/main.js",
+    "bundler:dev": "npm run buildTs && cross-env NODE_ENV=development node scripts/build-webpack.js",
+    "bundler:prod": "npm run buildTs && cross-env NODE_ENV=production node scripts/build-webpack.js",
     "prettier": "prettier --write **/*.js",
     "seed": "node ./scripts/seed.js",
-    "buildPlugin": "tsc --esModuleInterop --target es2017 --moduleResolution node --module commonjs plugins/react-server-dom-webpack-plugin.ts"
+    "buildTs": "tsc --esModuleInterop --target es2017 --moduleResolution node --module commonjs plugins/react-server-dom-webpack-plugin.ts plugins/react-client-components-loader-in-server.ts plugins/next-react-flight-exclude-server-loader.ts"
   },
   "babel": {
     "presets": [
