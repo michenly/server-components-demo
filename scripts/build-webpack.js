@@ -25,7 +25,7 @@ webpack(
   {
     mode: isProduction ? 'production' : 'development',
     devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
-    entry: [path.resolve(__dirname, '../src/App.server.js')],
+    entry: [path.resolve(__dirname, '../server/api.server.js')],
     output: {
       path: path.resolve(__dirname, '../build/server'),
       filename: 'main.js',

@@ -28,6 +28,8 @@ const {Pool} = require('pg');
 const React = require('react');
 const ReactApp = require('../src/App.server').default;
 
+const buildClientPath = path.join(__dirname, '..', 'build', 'client');
+
 // Don't keep credentials in the source tree in a real app!
 const pool = new Pool(require('../credentials'));
 
@@ -75,10 +77,7 @@ app.get(
   '/',
   handleErrors(async function(_req, res) {
     await waitForWebpack();
-    const html = readFileSync(
-      path.resolve(__dirname, '../build/index.html'),
-      'utf8'
-    );
+    const html = readFileSync(path.join(buildClientPath, 'index.html'), 'utf8');
     // Note: this is sending an empty HTML shell, like a client-side-only app.
     // However, the intended solution (which isn't built out yet) is to read
     // from the Server endpoint and turn its response into an HTML stream.
@@ -89,7 +88,7 @@ app.get(
 async function renderReactTree(res, props) {
   await waitForWebpack();
   const manifest = readFileSync(
-    path.resolve(__dirname, '../build/react-client-manifest.json'),
+    path.join(buildClientPath, 'react-client-manifest.json'),
     'utf8'
   );
   const moduleMap = JSON.parse(manifest);
@@ -184,13 +183,13 @@ app.get('/sleep/:ms', function(req, res) {
   }, req.params.ms);
 });
 
-app.use(express.static('build'));
+app.use(express.static(buildClientPath));
 app.use(express.static('public'));
 
 async function waitForWebpack() {
   while (true) {
     try {
-      readFileSync(path.resolve(__dirname, '../build/index.html'));
+      readFileSync(path.join(buildClientPath, 'index.html'));
       return;
     } catch (err) {
       console.log(
